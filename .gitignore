@@ -1,0 +1,36 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!terraform.tfvars.example
+
+# Kubeconfig
+kubeconfig
+.kubeconfig
+
+# Secrets
+manifests/secrets/*.yaml
+!manifests/secrets/*-template.yaml
+*.key
+*.pem
+.env
+.env.local
+
+# Backups
+backups/
+*.backup
+backup/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Dependencies
+node_modules/
