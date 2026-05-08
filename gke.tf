@@ -1,21 +1,36 @@
-resource "google_container_cluster" "primary" {
-  # ... existing config (name, location, network) ...
+# System Node Pool (Stable/Internal)
+resource "google_container_node_pool" "system_nodes" {
+  name       = "system-pool"
+  cluster    = google_container_cluster.primary.id
+  node_count = 1
 
-  # Enterprise Feature: Workload Identity (Allows Pods to assume IAM roles safely)
-  workload_identity_config {
-    workload_pool = "${var.project_id}.svc.id.goog"
+  node_config {
+    machine_type = "e2-medium"
+    service_account = google_service_account.gke_sa.email
+    oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
+    labels = {
+      role = "system"
+    }
+  }
+}
+
+# Workload Node Pool (For your actual Apps)
+resource "google_container_node_pool" "workload_nodes" {
+  name       = "workload-pool"
+  cluster    = google_container_cluster.primary.id
+  initial_node_count = 2
+
+  autoscaling {
+    min_node_count = 1
+    max_node_count = 5
   }
 
-  # Enterprise Feature: Release Channels (Automated version management)
-  release_channel {
-    channel = "REGULAR"
-  }
-
-  # Security: Shielded Nodes
-  enable_shielded_nodes = true
-
-  # Optimization: Cost Management
-  cost_management_config {
-    enabled = true
+  node_config {
+    machine_type = "e2-standard-2"
+    service_account = google_service_account.gke_sa.email
+    oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
+    labels = {
+      role = "workload"
+    }
   }
 }
