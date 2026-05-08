@@ -34,3 +34,4 @@ logs/
 
 # Dependencies
 node_modules/
+*.zip
