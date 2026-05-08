@@ -11,7 +11,16 @@ resource "google_container_cluster" "primary" {
   networking_mode = "VPC_NATIVE"
   ip_allocation_policy {
     cluster_secondary_range_name  = "gke-pods"
+
     services_secondary_range_name = "gke-services"
+
+
+private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = false # Keep endpoint public for easy access, but nodes private
+    master_ipv4_cidr_block  = "172.16.0.0/28"
+  }
+
   }
 }
 
