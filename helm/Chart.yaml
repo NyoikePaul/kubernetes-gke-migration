@@ -1,0 +1,12 @@
+apiVersion: v2
+name: gke-migration-platform
+description: Enterprise GKE migration stack featuring Velero DR and Prometheus Observability
+type: application
+version: 0.1.0
+dependencies:
+  - name: velero
+    version: "5.0.0"
+    repository: "https://vmware-tanzu.github.io/helm-charts"
+  - name: kube-prometheus-stack
+    version: "51.2.0"
+    repository: "https://prometheus-community.github.io/helm-charts"
