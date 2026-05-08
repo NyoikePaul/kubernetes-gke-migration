@@ -31,30 +31,21 @@ This platform provides a complete enterprise Kubernetes migration and deployment
 
 #  Architecture
 
-mermaid
 graph TD
-
     A[Google Cloud Platform] --> B[GKE Cluster]
-
     B --> C[Ingress Controller]
     C --> D[Load Balancer Services]
-
     D --> E[Deployments]
     D --> F[StatefulSets]
-
     E --> G[Application Pods]
     E --> H[Worker Pods]
-
     F --> I[Database Pods]
     F --> J[Redis Cache]
-
     B --> K[Persistent Volumes]
     K --> L[GCE Persistent Disks]
-
     B --> M[Prometheus & Grafana]
     B --> N[ELK Logging Stack]
     B --> O[RBAC & Network Policies]
-
     A --> P[Cloud SQL]
     A --> Q[Cloud Storage]
     A --> R[Cloud Memorystore]
