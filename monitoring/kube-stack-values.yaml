@@ -1,0 +1,18 @@
+# Values for prometheus-community/kube-prometheus-stack
+grafana:
+  enabled: true
+  adminPassword: "admin" # In prod, use a Secret!
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.nyoike.dev # Use your domain
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
