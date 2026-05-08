@@ -1,4 +1,11 @@
 #  Enterprise Kubernetes GKE Migration Platform
+# Kubernetes GKE Migration Platform
+
+![Terraform CI](https://github.com/NyoikePaul/kubernetes-gke-migration/actions/workflows/terraform-ci.yml/badge.svg)
+![License](https://img.shields.io/github/license/NyoikePaul/kubernetes-gke-migration)
+![GCP](https://img.shields.io/badge/GCP-GKE-blue?logo=google-cloud)
+
+> Enterprise-grade GKE migration platform...
 
 Production-grade Kubernetes deployment and migration framework for Google Kubernetes Engine (GKE) with enterprise security, observability, Infrastructure as Code, and automated DevOps workflows.
 
