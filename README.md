@@ -201,3 +201,30 @@ Portfolio: https://nyoikepaul.github.io
 MIT License — see the LICENSE file for details.
 
 ⭐ Enterprise Kubernetes. Cloud Native. Production Ready.
+## Architecture
+
+```mermaid
+graph TD
+    subgraph "GCP Project"
+        VPC[VPC Network] --> Subnet[Private Subnet]
+        Subnet --> GKE[GKE Private Cluster]
+        GKE --> SP[System Node Pool]
+        GKE --> WP[Workload Node Pool]
+    end
+    
+    subgraph "Cluster Operations"
+        WP --> Velero[Velero Backup]
+        WP --> Prom[Prometheus Stack]
+        GKE --> NetPol[Network Policies]
+    end
+
+    Internet[Public Traffic] --> LB[Cloud Load Balancer]
+    LB --> GKE
+```
+
+## Features
+- **VPC-Native GKE:** Optimized networking with Alias IP ranges.
+- **Private Clusters:** Nodes have no public IPs for maximum security.
+- **Disaster Recovery:** Velero-integrated backup and migration.
+- **Zero-Trust:** Default-deny Network Policies.
+- **CI/CD:** Automated Terraform validation via GitHub Actions.
