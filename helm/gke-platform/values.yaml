@@ -1,100 +1,52 @@
-# Default values for gke-platform
-replicaCount: 3
+# Global settings
+global:
+  environment: production
+  project: gke-migration
 
-image:
-  repository: gcr.io/PROJECT_ID/app
-  pullPolicy: IfNotPresent
-  tag: "latest"
+# Namespaces to create
+namespaces:
+  - name: production
+    labels:
+      env: production
+  - name: staging
+    labels:
+      env: staging
+  - name: monitoring
+    labels:
+      env: monitoring
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+# Resource quotas per namespace
+resourceQuota:
+  production:
+    requests.cpu: "10"
+    requests.memory: 20Gi
+    limits.cpu: "20"
+    limits.memory: 40Gi
+    pods: "50"
+  staging:
+    requests.cpu: "4"
+    requests.memory: 8Gi
+    limits.cpu: "8"
+    limits.memory: 16Gi
+    pods: "20"
 
-serviceAccount:
-  create: true
-  name: ""
-
-podAnnotations:
-  prometheus.io/scrape: "true"
-  prometheus.io/port: "8080"
-  prometheus.io/path: "/metrics"
-
-podSecurityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  fsGroup: 1000
-
-securityContext:
-  allowPrivilegeEscalation: false
-  capabilities:
-    drop:
-      - ALL
-  readOnlyRootFilesystem: true
-
-service:
-  type: LoadBalancer
-  port: 80
-  targetPort: 8080
-  annotations: {}
-
+# NGINX Ingress Controller
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-  hosts:
-    - host: example.com
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
+  replicaCount: 2
+  service:
+    type: LoadBalancer
+    annotations:
+      cloud.google.com/load-balancer-type: "External"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 
-resources:
-  limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
-    cpu: 250m
-    memory: 256Mi
-
-autoscaling:
+# Network policies
+networkPolicy:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity:
-  podAntiAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 100
-        podAffinityTerm:
-          labelSelector:
-            matchExpressions:
-              - key: app.kubernetes.io/name
-                operator: In
-                values:
-                  - gke-platform
-          topologyKey: kubernetes.io/hostname
-
-livenessProbe:
-  httpGet:
-    path: /health
-    port: 8080
-  initialDelaySeconds: 30
-  periodSeconds: 10
-
-readinessProbe:
-  httpGet:
-    path: /ready
-    port: 8080
-  initialDelaySeconds: 10
-  periodSeconds: 5
-
-env:
-  - name: ENVIRONMENT
-    value: "production"
-  - name: LOG_LEVEL
-    value: "info"
+  defaultDenyAll: true   # zero-trust: deny everything, then allow explicitly

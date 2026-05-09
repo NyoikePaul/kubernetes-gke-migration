@@ -1,0 +1,13 @@
+{{- range $ns, $quota := .Values.resourceQuota }}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ $ns }}-quota
+  namespace: {{ $ns }}
+spec:
+  hard:
+    {{- range $key, $val := $quota }}
+    {{ $key }}: {{ $val }}
+    {{- end }}
+{{- end }}
