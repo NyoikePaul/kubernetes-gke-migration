@@ -81,3 +81,4 @@ variable "common_labels" {
     project     = "gke-migration"
   }
 }
+# validated 2026-05-09
