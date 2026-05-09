@@ -10,16 +10,16 @@ resource "google_container_cluster" "primary" {
 
   networking_mode = "VPC_NATIVE"
   ip_allocation_policy {
-    cluster_secondary_range_name  = "gke-pods"
+    cluster_secondary_range_name = "gke-pods"
 
     services_secondary_range_name = "gke-services"
 
 
-private_cluster_config {
-    enable_private_nodes    = true
-    enable_private_endpoint = false # Keep endpoint public for easy access, but nodes private
-    master_ipv4_cidr_block  = "172.16.0.0/28"
-  }
+    private_cluster_config {
+      enable_private_nodes    = true
+      enable_private_endpoint = false # Keep endpoint public for easy access, but nodes private
+      master_ipv4_cidr_block  = "172.16.0.0/28"
+    }
 
   }
 }
@@ -31,7 +31,7 @@ resource "google_container_node_pool" "primary_nodes" {
   node_count = 2
 
   node_config {
-    machine_type = "e2-medium"
+    machine_type    = "e2-medium"
     service_account = google_service_account.gke_sa.email
 
     oauth_scopes = [
