@@ -36,3 +36,4 @@ logs/
 node_modules/
 *.zip
 terraform/terraform.tfvars
+gcloud components install kubectl/
