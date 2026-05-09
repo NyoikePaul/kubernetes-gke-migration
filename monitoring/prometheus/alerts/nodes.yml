@@ -1,0 +1,39 @@
+groups:
+  - name: node-alerts
+    interval: 30s
+    rules:
+      - alert: NodeHighCPU
+        expr: instance:node_cpu_utilisation:rate5m > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Node {{ $labels.instance }} CPU above 85%"
+          description: "CPU usage is {{ $value | humanizePercentage }} — consider scaling the node pool."
+
+      - alert: NodeHighMemory
+        expr: instance:node_memory_utilisation:ratio > 0.90
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node {{ $labels.instance }} memory above 90%"
+          description: "Memory usage is {{ $value | humanizePercentage }}."
+
+      - alert: NodeDiskPressure
+        expr: kube_node_status_condition{condition="DiskPressure", status="true"} == 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node {{ $labels.node }} has disk pressure"
+          description: "Disk pressure detected — pods may be evicted."
+
+      - alert: NodeNotReady
+        expr: kube_node_status_condition{condition="Ready", status="true"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node {{ $labels.node }} is NotReady"
+          description: "Node has been NotReady for more than 2 minutes."
