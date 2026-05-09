@@ -1,0 +1,28 @@
+project_id   = "YOUR-GCP-PROJECT-ID"
+region       = "us-central1"
+cluster_name = "gke-platform"
+
+release_channel  = "REGULAR"
+node_cidr        = "10.0.0.0/20"
+pod_cidr         = "10.4.0.0/14"
+svc_cidr         = "10.0.32.0/20"
+master_ipv4_cidr = "172.16.0.0/28"
+
+master_authorized_networks = [
+  {
+    cidr_block   = "YOUR-OFFICE-OR-VPN-CIDR/32"
+    display_name = "office-vpn"
+  }
+]
+
+system_node_machine_type = "e2-standard-2"
+app_node_machine_type    = "e2-standard-4"
+app_min_nodes            = 1
+app_max_nodes            = 5
+
+common_labels = {
+  managed-by  = "terraform"
+  environment = "production"
+  project     = "gke-migration"
+  owner       = "platform-team"
+}

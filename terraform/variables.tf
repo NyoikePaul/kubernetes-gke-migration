@@ -1,70 +1,83 @@
 variable "project_id" {
-  description = "GCP Project ID"
   type        = string
+  description = "GCP Project ID where the cluster will be created."
 }
 
 variable "region" {
-  description = "GCP Region"
   type        = string
   default     = "us-central1"
+  description = "GCP region for the regional cluster."
 }
 
 variable "cluster_name" {
-  description = "GKE Cluster Name"
   type        = string
-  default     = "gke-cluster"
+  default     = "gke-platform"
+  description = "Base name used for the cluster and all derived resources."
 }
 
-variable "environment" {
-  description = "Environment"
+variable "release_channel" {
   type        = string
-  default     = "production"
+  default     = "REGULAR"
+  description = "GKE release channel: RAPID | REGULAR | STABLE."
+  validation {
+    condition     = contains(["RAPID", "REGULAR", "STABLE"], var.release_channel)
+    error_message = "release_channel must be one of: RAPID, REGULAR, STABLE."
+  }
 }
 
-variable "initial_nodes" {
-  description = "Initial number of nodes"
-  type        = number
-  default     = 3
+variable "node_cidr" {
+  type    = string
+  default = "10.0.0.0/20"
 }
 
-variable "min_nodes" {
-  description = "Minimum nodes in pool"
-  type        = number
-  default     = 1
+variable "pod_cidr" {
+  type    = string
+  default = "10.4.0.0/14"
 }
 
-variable "max_nodes" {
-  description = "Maximum nodes in pool"
-  type        = number
-  default     = 10
+variable "svc_cidr" {
+  type    = string
+  default = "10.0.32.0/20"
 }
 
-variable "machine_type" {
-  description = "Machine type"
-  type        = string
-  default     = "n1-standard-2"
+variable "master_ipv4_cidr" {
+  type    = string
+  default = "172.16.0.0/28"
 }
 
-variable "preemptible" {
-  description = "Use preemptible nodes"
-  type        = bool
-  default     = false
+variable "master_authorized_networks" {
+  type = list(object({
+    cidr_block   = string
+    display_name = string
+  }))
+  default = [{ cidr_block = "0.0.0.0/0", display_name = "all (tighten in production!)" }]
 }
 
-variable "subnet_cidr" {
-  description = "Subnet CIDR"
-  type        = string
-  default     = "10.0.0.0/20"
+variable "system_node_machine_type" {
+  type    = string
+  default = "e2-standard-2"
 }
 
-variable "pods_cidr" {
-  description = "Pods CIDR"
-  type        = string
-  default     = "10.4.0.0/14"
+variable "app_node_machine_type" {
+  type    = string
+  default = "e2-standard-4"
 }
 
-variable "services_cidr" {
-  description = "Services CIDR"
-  type        = string
-  default     = "10.8.0.0/20"
+variable "app_min_nodes" {
+  type    = number
+  default = 1
+}
+
+variable "app_max_nodes" {
+  type    = number
+  default = 5
+}
+
+variable "common_labels" {
+  type = map(string)
+  default = {
+    managed-by  = "terraform"
+    environment = "production"
+    project     = "gke-migration"
+  }
 }
