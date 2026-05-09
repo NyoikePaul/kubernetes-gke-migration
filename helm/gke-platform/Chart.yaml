@@ -8,3 +8,4 @@ keywords: [gke, kubernetes, platform, ingress, rbac]
 maintainers:
   - name: Paul Nyoike
     url: https://github.com/NyoikePaul
+icon: https://helm.sh/img/helm.svg
