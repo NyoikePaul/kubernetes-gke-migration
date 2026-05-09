@@ -174,4 +174,8 @@ graph TD
     Internet[Public Traffic] --> LB[Cloud Load Balancer]
     LB --> GKE
 ```
+<img width="1366" height="693" alt="image" src="https://github.com/user-attachments/assets/f3c4ef63-e0ec-4f0c-95ed-584343bf86ce" />
+<img width="1366" height="686" alt="image" src="https://github.com/user-attachments/assets/6ba2c4eb-f723-46b4-9d1b-ac62024712a0" />
+
+
 
