@@ -1,3 +1,6 @@
+⚠️ **Early Stage Project**  
+This repository is under active development. Terraform module is functional. Helm charts, migration scripts, and full observability stack are in progress.
+
 #  Enterprise Kubernetes GKE Migration Platform
 # Kubernetes GKE Migration Platform
 
