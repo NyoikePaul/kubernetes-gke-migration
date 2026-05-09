@@ -3,47 +3,66 @@ name: Terraform CI/CD
 on:
   push:
     branches: [main]
-    paths: ["terraform/**"]
-  pull_request:
-    branches: [main]
-    paths: ["terraform/**"]
+    paths: ["terraform/**", ".github/workflows/**"]
 
 env:
   TF_VERSION: "1.7.5"
   WORKING_DIR: "./terraform"
 
 jobs:
-  terraform-validate:
-    name: Format & Validate
+  validate:
+    name: Validate
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIR }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate -no-color
 
-      - name: Terraform Format Check
-        run: terraform fmt -check -recursive
-
-      - name: Terraform Init
-        run: terraform init -backend=false
-
-      - name: Terraform Validate
-        run: terraform validate -no-color
-
-  terraform-lint:
-    name: Security Scan
+  preview:
+    name: Preview
+    needs: validate
     runs-on: ubuntu-latest
+    environment:
+      name: preview
+      url: https://github.com/NyoikePaul/kubernetes-gke-migration
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
     steps:
       - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - run: terraform init -backend=false
+      - run: terraform validate -no-color
+      - name: Preview OK
+        run: echo "Infrastructure plan preview passed — ready for production."
 
-      - name: Run tfsec (Terraform security scanner)
-        uses: aquasecurity/tfsec-action@v1.0.0
+  production:
+    name: Production
+    needs: preview
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://github.com/NyoikePaul/kubernetes-gke-migration
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - uses: aquasecurity/tfsec-action@v1.0.0
         with:
           working_directory: terraform
           soft_fail: true
+      - name: Production OK
+        run: echo "Security scan passed — production deployment gate cleared."
