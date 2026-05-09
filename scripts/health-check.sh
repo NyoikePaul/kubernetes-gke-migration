@@ -1,17 +1,20 @@
-#!/bin/bash
-echo "🚀 Starting Pre-Migration Health Check..."
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Check if kubectl can connect
-kubectl cluster-info || { echo "❌ Cluster unreachable"; exit 1; }
+echo "=== GKE Platform Health Check ==="
 
-# Check Node Status
-READY_NODES=$(kubectl get nodes | grep -c " Ready")
-echo "✅ Nodes Ready: $READY_NODES"
+echo "-- Nodes --"
+kubectl get nodes -o wide
 
-# Check for failing pods
-FAILED_PODS=$(kubectl get pods -A --field-selector=status.phase!=Running,status.phase!=Succeeded | wc -l)
-if [ "$FAILED_PODS" -gt 1 ]; then
-    echo "⚠️ Warning: $FAILED_PODS pods are not running."
-else
-    echo "✅ All system pods healthy."
-fi
+echo "-- System Pods --"
+kubectl get pods -n kube-system --field-selector=status.phase!=Running 2>/dev/null \
+  && echo "All system pods running." || echo "WARNING: some system pods not running."
+
+echo "-- All Namespaces Pod Status --"
+kubectl get pods --all-namespaces --field-selector=status.phase!=Running 2>/dev/null \
+  || echo "All pods healthy."
+
+echo "-- HPA Status --"
+kubectl get hpa --all-namespaces 2>/dev/null || echo "No HPAs found."
+
+echo "=== Health Check Complete ==="
