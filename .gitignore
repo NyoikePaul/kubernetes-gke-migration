@@ -35,3 +35,4 @@ logs/
 # Dependencies
 node_modules/
 *.zip
+terraform/terraform.tfvars
