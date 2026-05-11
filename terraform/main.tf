@@ -287,3 +287,10 @@ resource "google_container_node_pool" "app" {
     metadata = { disable-legacy-endpoints = "true" }
   }
 }
+
+###############################################################################
+# 5. DELETION PROTECTION — prevents accidental terraform destroy
+###############################################################################
+# To destroy the cluster you must first run:
+#   terraform apply -var="deletion_protection=false" -var-file=terraform.tfvars
+# This is intentional — protects production clusters from accidents.

@@ -1,16 +1,23 @@
 name: Terraform CI/CD
-
+ 
 on:
   push:
     branches: [main]
-    paths: ["terraform/**", ".github/workflows/**"]
-
+    paths:
+      - "terraform/**"
+      - "helm/**"
+      - "k8s/**"
+      - "security/**"
+      - ".github/workflows/**"
+  pull_request:
+    branches: [main]
+ 
 env:
   TF_VERSION: "1.7.5"
   WORKING_DIR: "./terraform"
-
+ 
 jobs:
-  validate:
+  terraform-validate:
     name: Validate
     runs-on: ubuntu-latest
     defaults:
@@ -18,20 +25,45 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
+ 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
-      - run: terraform fmt -check -recursive
-      - run: terraform init -backend=false
-      - run: terraform validate -no-color
-
+ 
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+ 
+      - name: Terraform Init
+        run: terraform init -backend=false
+ 
+      - name: Terraform Validate
+        run: terraform validate -no-color
+ 
+  helm-validate:
+    name: Helm Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "3.14.0"
+ 
+      - name: Helm Lint
+        run: helm lint helm/gke-platform
+ 
+      - name: Helm Template (dry-run)
+        run: helm template gke-platform helm/gke-platform > /dev/null && echo "✅ Helm template valid"
+ 
   preview:
     name: Preview
-    needs: validate
+    needs: [terraform-validate, helm-validate]
     runs-on: ubuntu-latest
     environment:
       name: preview
-      url: https://github.com/NyoikePaul/kubernetes-gke-migration
+      url: https://kubernetes-gke-migration.vercel.app
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIR }}
@@ -43,26 +75,24 @@ jobs:
       - run: terraform init -backend=false
       - run: terraform validate -no-color
       - name: Preview OK
-        run: echo "Infrastructure plan preview passed — ready for production."
-
+        run: echo "✅ Infrastructure validated — preview gate cleared."
+ 
   production:
     name: Production
     needs: preview
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://github.com/NyoikePaul/kubernetes-gke-migration
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIR }}
+      url: https://kubernetes-gke-migration.vercel.app
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-      - uses: aquasecurity/tfsec-action@v1.0.0
+ 
+      - name: tfsec Security Scan
+        uses: aquasecurity/tfsec-action@v1.0.3
         with:
           working_directory: terraform
           soft_fail: true
+          format: lovely
+ 
       - name: Production OK
-        run: echo "Security scan passed — production deployment gate cleared."
+        run: echo "✅ Security scan complete — production gate cleared."

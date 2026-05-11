@@ -82,3 +82,15 @@ variable "common_labels" {
   }
 }
 # validated 2026-05-09
+
+variable "deletion_protection" {
+  type        = bool
+  default     = true
+  description = "Set to false before running terraform destroy on the cluster."
+}
+
+variable "deletion_protection" {
+  type        = bool
+  default     = true
+  description = "Set to false before running terraform destroy on the cluster."
+}

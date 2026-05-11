@@ -8,13 +8,13 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; }
     .hero { padding: 80px 40px; text-align: center; border-bottom: 1px solid #21262d; }
-    .badge { display: inline-block; background: #238636; color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; margin-bottom: 20px; }
+    .badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+    .badges img { height: 22px; }
     h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 16px; }
     h1 span { color: #58a6ff; }
-    p { color: #8b949e; font-size: 1.1rem; max-width: 600px; margin: 0 auto 32px; line-height: 1.6; }
-    .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
-    .badges img { height: 24px; }
-    .btn { display: inline-block; background: #238636; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 0 8px; transition: background 0.2s; }
+    .subtitle { color: #8b949e; font-size: 1.1rem; max-width: 600px; margin: 0 auto 32px; line-height: 1.6; }
+    .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-block; background: #238636; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background 0.2s; }
     .btn:hover { background: #2ea043; }
     .btn.outline { background: transparent; border: 1px solid #30363d; color: #e6edf3; }
     .btn.outline:hover { background: #21262d; }
@@ -22,61 +22,75 @@
     .card { background: #161b22; border: 1px solid #21262d; border-radius: 12px; padding: 28px; }
     .card h3 { font-size: 1rem; color: #58a6ff; margin-bottom: 10px; }
     .card p { font-size: 0.9rem; color: #8b949e; line-height: 1.6; }
-    .pipeline { background: #161b22; border: 1px solid #21262d; border-radius: 12px; padding: 40px; max-width: 800px; margin: 0 auto 60px; text-align: center; }
-    .pipeline h2 { margin-bottom: 30px; font-size: 1.3rem; color: #8b949e; }
+    .pipeline { background: #161b22; border: 1px solid #21262d; border-radius: 12px; padding: 40px; max-width: 860px; margin: 0 auto 60px; text-align: center; }
+    .pipeline h2 { margin-bottom: 30px; font-size: 1.2rem; color: #8b949e; }
     .steps { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
     .step { background: #0d1117; border: 1px solid #238636; border-radius: 8px; padding: 10px 20px; font-size: 0.9rem; color: #3fb950; font-weight: 600; }
     .arrow { color: #30363d; font-size: 1.2rem; }
+    .edge { background: #161b22; border: 1px solid #21262d; border-radius: 12px; padding: 40px; max-width: 860px; margin: 0 auto 60px; }
+    .edge h2 { text-align: center; margin-bottom: 24px; color: #58a6ff; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { background: #21262d; color: #e6edf3; padding: 10px 16px; text-align: left; }
+    td { padding: 10px 16px; border-bottom: 1px solid #21262d; color: #8b949e; }
+    td:first-child { color: #e6edf3; }
     footer { text-align: center; padding: 30px; color: #484f58; font-size: 0.85rem; border-top: 1px solid #21262d; }
+    a { color: #58a6ff; text-decoration: none; }
   </style>
 </head>
 <body>
-
+ 
   <div class="hero">
-    <div class="badge">✅ CI/CD Passing</div>
-    <h1>Enterprise <span>Kubernetes</span><br/>GKE Migration Platform</h1>
-    <p>Production-grade infrastructure for Google Kubernetes Engine — private clusters, Workload Identity, zero-trust networking, and automated deployments.</p>
     <div class="badges">
-      <img src="https://img.shields.io/badge/Kubernetes-GKE-blue?logo=kubernetes" />
-      <img src="https://img.shields.io/badge/IaC-Terraform-623CE4?logo=terraform" />
-      <img src="https://img.shields.io/badge/Package_Manager-Helm-0F1689?logo=helm" />
-      <img src="https://img.shields.io/badge/Monitoring-Prometheus-orange?logo=prometheus" />
+      <!-- Real CI badge from GitHub Actions -->
+      <img src="https://github.com/NyoikePaul/kubernetes-gke-migration/actions/workflows/terraform.yml/badge.svg" alt="CI Status" />
+      <img src="https://img.shields.io/badge/Terraform->=1.6-623CE4?logo=terraform" />
+      <img src="https://img.shields.io/badge/Kubernetes-GKE-326CE5?logo=kubernetes" />
+      <img src="https://img.shields.io/badge/Helm-3.12-0F1689?logo=helm" />
+      <img src="https://img.shields.io/badge/Security-tfsec-purple" />
+      <img src="https://img.shields.io/badge/License-MIT-green" />
     </div>
-    <a href="https://github.com/NyoikePaul/kubernetes-gke-migration" class="btn">View on GitHub</a>
-    <a href="https://github.com/NyoikePaul/kubernetes-gke-migration/actions" class="btn outline">CI/CD Pipeline</a>
+    <h1>Enterprise <span>Kubernetes</span><br/>GKE Migration Platform</h1>
+    <p class="subtitle">Production-grade infrastructure for Google Kubernetes Engine — private clusters, Workload Identity, zero-trust networking, and automated deployments.</p>
+    <div class="btns">
+      <a href="https://github.com/NyoikePaul/kubernetes-gke-migration" class="btn">⭐ View on GitHub</a>
+      <a href="https://github.com/NyoikePaul/kubernetes-gke-migration/actions" class="btn outline">⚙️ CI/CD Pipeline</a>
+      <a href="https://github.com/NyoikePaul/kubernetes-gke-migration/releases/tag/v1.0.0" class="btn outline">📦 v1.0.0 Release</a>
+    </div>
   </div>
-
+ 
   <div class="grid">
     <div class="card">
       <h3>☸️ Private GKE Cluster</h3>
-      <p>Regional cluster with no public node IPs, Workload Identity Federation, Shielded Nodes, and Binary Authorization.</p>
+      <p>Regional cluster with no public node IPs, Workload Identity Federation, Shielded Nodes, and Binary Authorization enforcement.</p>
     </div>
     <div class="card">
       <h3>🔒 Zero-Trust Networking</h3>
-      <p>VPC-native networking, Cloud NAT, Calico network policies, and default-deny rules enforced at the namespace level.</p>
+      <p>VPC-native networking, Cloud NAT, Calico network policies, and default-deny rules enforced at the namespace level via Helm.</p>
     </div>
     <div class="card">
-      <h3>📦 Helm Packaging</h3>
-      <p>Helm chart managing namespace creation, ResourceQuotas, and NetworkPolicies across production and staging environments.</p>
+      <h3>📦 Helm Platform Chart</h3>
+      <p>Chart manages namespace creation, ResourceQuotas, NetworkPolicies, and LimitRanges across production and staging environments.</p>
     </div>
     <div class="card">
-      <h3>📊 Prometheus Monitoring</h3>
-      <p>Scrape configs for API server, kubelet, cAdvisor, and pods. Eight alerting rules covering nodes, deployments, and HPAs.</p>
+      <h3>📊 Google Managed Prometheus</h3>
+      <p>Zero-config GMP with 8 production alert rules covering node CPU/memory, pod crashes, deployment mismatches, and HPA saturation.</p>
     </div>
     <div class="card">
-      <h3>🛡️ Security Scanning</h3>
-      <p>tfsec scans every push for Terraform misconfigurations before any infrastructure change is allowed through the pipeline.</p>
+      <h3>🛡️ tfsec Security Scanning</h3>
+      <p>Every push triggers tfsec against 200+ GCP rules. Binary Authorization and Workload Identity enforced at cluster level.</p>
     </div>
     <div class="card">
-      <h3>⚡ Node Pool Autoscaling</h3>
-      <p>Separate system and application node pools with SURGE upgrades, zero max-unavailable, and BALANCED zone distribution.</p>
+      <h3>⚡ Dual Node Pools</h3>
+      <p>Separate system (tainted) and app pools with SURGE upgrades, zero max-unavailable, and BALANCED zone distribution.</p>
     </div>
   </div>
-
+ 
   <div class="pipeline">
     <h2>CI/CD Pipeline — every push to main</h2>
     <div class="steps">
       <div class="step">✅ Format Check</div>
+      <div class="arrow">→</div>
+      <div class="step">✅ Helm Lint</div>
       <div class="arrow">→</div>
       <div class="step">✅ Validate</div>
       <div class="arrow">→</div>
@@ -87,11 +101,27 @@
       <div class="step">✅ Production</div>
     </div>
   </div>
-
-  <footer>Built by Paul Nyoike &nbsp;·&nbsp;
-    <a href="https://github.com/NyoikePaul" style="color:#58a6ff;">GitHub</a> &nbsp;·&nbsp;
-    <a href="https://nyoikepaul.github.io" style="color:#58a6ff;">Portfolio</a>
+ 
+  <div class="edge" style="padding: 40px; max-width: 860px; margin: 0 auto 60px;">
+    <h2>Edge Over Typical Repos</h2>
+    <table>
+      <tr><th>Feature</th><th>This Repo</th><th>Typical Portfolio</th></tr>
+      <tr><td>Private nodes + Cloud NAT</td><td>✅</td><td>❌ usually public</td></tr>
+      <tr><td>Workload Identity (no key files)</td><td>✅</td><td>❌ SA keys</td></tr>
+      <tr><td>Binary Authorization</td><td>✅</td><td>❌ rarely</td></tr>
+      <tr><td>Separate system + app node pools</td><td>✅</td><td>❌ single pool</td></tr>
+      <tr><td>tfsec in CI pipeline</td><td>✅</td><td>❌</td></tr>
+      <tr><td>Google Managed Prometheus</td><td>✅</td><td>❌ self-managed</td></tr>
+      <tr><td>Dependabot auto-updates</td><td>✅</td><td>❌</td></tr>
+    </table>
+  </div>
+ 
+  <footer>
+    Built by <a href="https://github.com/NyoikePaul">Paul Nyoike</a> &nbsp;·&nbsp;
+    <a href="https://github.com/NyoikePaul/kubernetes-gke-migration">GitHub</a> &nbsp;·&nbsp;
+    <a href="https://nyoikepaul.github.io">Portfolio</a> &nbsp;·&nbsp;
+    v1.0.0
   </footer>
-
+ 
 </body>
 </html>

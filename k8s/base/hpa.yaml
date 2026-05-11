@@ -1,13 +1,14 @@
+# HPA template — copy and rename scaleTargetRef.name to match your deployment
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: app-hpa
+  name: sample-app-hpa
   namespace: production
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: app
+    name: sample-app    # matches examples/sample-app/deployment.yaml
   minReplicas: 2
   maxReplicas: 10
   metrics:
@@ -17,3 +18,22 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300   # wait 5min before scaling down
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0     # scale up immediately
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60

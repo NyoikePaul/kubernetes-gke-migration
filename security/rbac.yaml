@@ -7,3 +7,43 @@ rules:
   - apiGroups: ["", "apps"]
     resources: ["pods", "deployments", "services"]
     verbs: ["get", "list", "watch"]
+---
+# RoleBinding — grants developer-readonly to the developers group
+# Replace with real user/group emails
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: developer-readonly-binding
+  namespace: production
+subjects:
+  - kind: Group
+    name: developers@your-domain.com   # replace with real group
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: developer-readonly
+  apiGroup: rbac.authorization.k8s.io
+---
+# RoleBinding — grants deployer role to CI service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: deployer-binding
+  namespace: production
+subjects:
+  - kind: ServiceAccount
+    name: ci-deployer-sa
+    namespace: production
+roleRef:
+  kind: Role
+  name: deployer
+  apiGroup: rbac.authorization.k8s.io
+---
+# ServiceAccount for CI/CD deployer
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ci-deployer-sa
+  namespace: production
+  annotations:
+    iam.gke.io/gcp-service-account: terraform-deployer@YOUR-PROJECT.iam.gserviceaccount.com

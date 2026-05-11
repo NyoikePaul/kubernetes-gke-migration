@@ -1,0 +1,55 @@
+# Production environment overrides
+# Usage: helm install gke-platform ./helm/gke-platform --values values-prod.yaml
+ 
+global:
+  environment: production
+  project: gke-migration
+ 
+namespaces:
+  - name: production
+    labels:
+      env: production
+      tier: workloads
+  - name: staging
+    labels:
+      env: staging
+      tier: workloads
+  - name: monitoring
+    labels:
+      env: monitoring
+      tier: platform
+ 
+resourceQuota:
+  production:
+    requests.cpu: "20"
+    requests.memory: 40Gi
+    limits.cpu: "40"
+    limits.memory: 80Gi
+    pods: "100"
+  staging:
+    requests.cpu: "8"
+    requests.memory: 16Gi
+    limits.cpu: "16"
+    limits.memory: 32Gi
+    pods: "40"
+  monitoring:
+    requests.cpu: "4"
+    requests.memory: 8Gi
+    limits.cpu: "8"
+    limits.memory: 16Gi
+    pods: "20"
+ 
+networkPolicy:
+  enabled: true
+  defaultDenyAll: true
+ 
+ingress:
+  enabled: true
+  replicaCount: 3    # 3 replicas in production (vs 2 default)
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
