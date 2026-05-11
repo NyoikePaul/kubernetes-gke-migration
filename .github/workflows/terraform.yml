@@ -24,7 +24,7 @@ jobs:
       run:
         working-directory: ${{ env.WORKING_DIR }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
  
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -44,7 +44,7 @@ jobs:
     name: Helm Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
  
       - name: Install Helm
         uses: azure/setup-helm@v3
@@ -68,7 +68,7 @@ jobs:
       run:
         working-directory: ${{ env.WORKING_DIR }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
@@ -85,7 +85,7 @@ jobs:
       name: production
       url: https://kubernetes-gke-migration.vercel.app
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
  
       - name: tfsec Security Scan
         uses: aquasecurity/tfsec-action@v1.0.3
